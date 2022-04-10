@@ -1,10 +1,10 @@
 import { View, Text } from "react-native";
 import React from "react";
 
-export default function More() {
+export default function ServiceStatus() {
   return (
     <View>
-      <Text>More</Text>
+      <Text>serviceStatus</Text>
     </View>
   );
 }

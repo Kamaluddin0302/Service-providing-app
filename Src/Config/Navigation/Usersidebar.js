@@ -1,16 +1,24 @@
 import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
 
 import { View, Text, StyleSheet, Image } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   MaterialCommunityIcons,
-  MaterialIcons,
   AntDesign,
   EvilIcons,
   FontAwesome,
 } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function Sidebar(props) {
+export default function UserSidebar(props) {
+  let [user, setUser] = useState("");
+  useEffect(async () => {
+    let User = await AsyncStorage.getItem("user");
+    if (User) {
+      setUser(JSON.parse(User).user);
+      console.log(User);
+    }
+  }, []);
   return (
     <DrawerContentScrollView {...props}>
       <View style={styles.topHeader}>
@@ -18,14 +26,14 @@ export default function Sidebar(props) {
           source={require("./../../Assests/Ellipse9.png")}
           style={styles.image}
         />
-        <Text style={styles.name}>Isac Oscar</Text>
+        <Text style={styles.name}>{user.name}</Text>
       </View>
       <View style={styles.menuContainer}>
         <DrawerItem
-          label="Search"
+          label="Home"
           labelStyle={{}}
           onPress={() => {
-            props.navigation.navigate("Search");
+            props.navigation.navigate("Home");
           }}
           icon={({ color, size }) => (
             <EvilIcons name="search" size={size} color={"lightgray"} />
@@ -41,18 +49,9 @@ export default function Sidebar(props) {
             <FontAwesome name="user" size={size} color={"lightgray"} />
           )}
         />
+
         <DrawerItem
-          label="My Favorites"
-          labelStyle={{}}
-          onPress={() => {
-            props.navigation.navigate("MyFavorites");
-          }}
-          icon={({ color, size }) => (
-            <MaterialIcons name="favorite" size={size} color={"lightgray"} />
-          )}
-        />
-        <DrawerItem
-          label="More"
+          label="Order Status"
           labelStyle={{}}
           onPress={() => {
             props.navigation.navigate("More");
@@ -65,10 +64,14 @@ export default function Sidebar(props) {
           label="Logout"
           labelStyle={{}}
           onPress={() => {
-            props.navigation.replace("Singin");
+            props.navigation.replace("Auth");
           }}
           icon={({ color, size }) => (
-            <MaterialCommunityIcons name="logout" size={size} color={"lightgray"} />
+            <MaterialCommunityIcons
+              name="logout"
+              size={size}
+              color={"lightgray"}
+            />
           )}
         />
       </View>

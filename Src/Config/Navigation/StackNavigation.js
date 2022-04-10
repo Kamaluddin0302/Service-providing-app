@@ -1,8 +1,10 @@
 import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Singin, Signup, Auth, Detail } from "../../Screens/index";
-import DrawerNavigator from "./Drawernavigatior";
+import { Auth, Detail } from "../../Screens/index";
+import UserDrawer from "./UserDrawer";
+import ServiceProviderDrawer from "./serviceProviderDrawer";
+import getOrder from "../../Screens/GetOrder/GetOrder";
 
 const Stack = createNativeStackNavigator();
 
@@ -16,23 +18,27 @@ function StackNavigator() {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="Singup"
-          component={Signup}
+          name="UserHome"
+          component={UserDrawer}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name="getOrder"
+          component={getOrder}
           options={{
-            headerBackTitle: true,
-            headerTintColor: "white",
-            headerTitleStyle: {
-              color: "#fb2056",
-            },
+            headerShown: true,
             headerStyle: {
-              backgroundColor: "#fb2056",
+              backgroundColor: "#0466C8",
             },
+            headerTintColor: "white",
+            headerTitle: "Get Order",
           }}
         />
 
         <Stack.Screen
-          name="Home"
-          component={DrawerNavigator}
+          name="SeriveProviderHome"
+          component={ServiceProviderDrawer}
           options={{ headerShown: false }}
         />
         <Stack.Screen

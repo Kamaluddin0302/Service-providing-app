@@ -9,19 +9,10 @@ import {
 import React, { useEffect, useState } from "react";
 import TextInput from "../../../Components/TextInput/Textinput";
 import Button from "../../../Components/Button/Button";
-import RadioForm, {
-  RadioButton,
-  RadioButtonInput,
-  RadioButtonLabel,
-} from "react-native-simple-radio-button";
-
-var radio_props = [
-  { label: "User", value: "User" },
-  { label: "Service Provider", value: "Service Provider" },
-];
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Singup({ navigation, route }) {
-  let [type, setType] = useState("User");
   let [email, setEmail] = useState("");
   let [name, setName] = useState("");
   let [Password, setPassword] = useState("");
@@ -31,7 +22,31 @@ export default function Singup({ navigation, route }) {
     // navigation.navigate("Home");
   }, []);
 
-  let signupFunc = () => {};
+  let signupFunc = () => {
+    console.log(address, name, Password, email);
+    axios
+      .post(`https://servicesproviderapp.herokuapp.com/api/user/register`, {
+        name: name,
+        email: email,
+        password: Password,
+        address: address,
+      })
+      .then((response) => {
+        console.log(response.data);
+        if (response.data.result === "success") {
+          alert("Signup Success");
+          let userObj = { user: response.data.user };
+          AsyncStorage.setItem("user", JSON.stringify(userObj));
+          navigation.navigate("UserHome");
+        } else {
+          alert(response.data.message);
+        }
+      })
+      .catch(function (error) {
+        console.log(error.message);
+        alert(error.message);
+      });
+  };
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
@@ -71,18 +86,6 @@ export default function Singup({ navigation, route }) {
             security={true}
             value={Password}
             GetInputVlue={(text) => setPassword(text)}
-          />
-
-          <Text style={styles.account}>Select Account Type</Text>
-
-          <RadioForm
-            radio_props={radio_props}
-            initial={"User"}
-            onPress={(value) => {
-              console.log(value);
-              setType(value);
-            }}
-            formHorizontal={false}
           />
 
           <Button

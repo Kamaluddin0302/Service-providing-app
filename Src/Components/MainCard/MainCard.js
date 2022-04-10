@@ -8,12 +8,7 @@ export default function MainCard() {
       <ImageBackground
         source={require("./../../Assests/image1.png")}
         style={styles.imageBack}
-      >
-        <View style={styles.location}>
-          <Image source={require("./../../Assests/location.png")} />
-          <Text>Los angeles, CA</Text>
-        </View>
-      </ImageBackground>
+      ></ImageBackground>
       <View style={styles.bottomCard}>
         <View style={styles.cardItem}>
           <Text style={styles.title}>Land</Text>
@@ -59,11 +54,11 @@ export default function MainCard() {
 const styles = StyleSheet.create({
   container: {
     marginRight: 15,
-    height: 300,
+    height: 200,
   },
   imageBack: {
     width: 270,
-    height: 210,
+    height: 110,
   },
   location: {
     flexDirection: "row",
@@ -80,7 +75,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     borderRadius: 20,
     position: "absolute",
-    top: 180,
+    top: 80,
     width: "100%",
     paddingHorizontal: 20,
     paddingVertical: 10,

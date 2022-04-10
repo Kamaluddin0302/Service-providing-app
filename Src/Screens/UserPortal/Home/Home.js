@@ -7,55 +7,57 @@ import {
   ScrollView,
   Dimensions,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { EvilIcons } from "@expo/vector-icons";
-import MainCard from "../../Components/MainCard/MainCard";
-import MoreCard from "./../../Components/MoreCard/MoreCard";
-import BottomSheet from "./../../Components/BottomSheet/BottomSheet";
+import MainCard from "../../../Components/MainCard/MainCard";
+import MoreCard from "./../../../Components/MoreCard/MoreCard";
+import BottomSheet from "./../../../Components/BottomSheet/BottomSheet";
 import RBSheet from "react-native-raw-bottom-sheet";
+import { getallService } from "./../../../Config/function";
 
 let card = [
   {
-    image: require("./../../Assests/cardimage1.png"),
+    image: require("./../../../Assests/cardimage1.png"),
     price: "$433,000",
     address: "408 E 92nd St, New York, NY 10128",
   },
   {
-    image: require("./../../Assests/cardimage2.png"),
+    image: require("./../../../Assests/cardimage2.png"),
     price: "$712,000",
     address: "440 E 79th St APT 8C, New York, NY 10075",
   },
 ];
-export default function Search({ navigation }) {
+export default function Home({ navigation }) {
   const windowHeight = Dimensions.get("window").height;
+  let [services, setServices] = useState();
 
-  const addItemHandleChange = () => {
-    this[RBSheet + 0].open();
-  };
+  // const addItemHandleChange = () => {
+  //   this[RBSheet + 0].open();
+  // };
 
-  const addItemHandleChangeClose = () => {
-    this[RBSheet + 0].close();
-  };
+  // const addItemHandleChangeClose = () => {
+  //   this[RBSheet + 0].close();
+  // };
 
+  useEffect(async () => {
+    let getallServices = await getallService();
+    setServices(getallServices);
+
+    console.log(getallServices);
+  }, []);
   return (
     <ScrollView>
       <View style={styles.container}>
-        <Text style={styles.findText}>Find your place in</Text>
-        <View style={styles.findPlaceView}>
-          <Image source={require("./../../Assests/findplace.png")} />
-          <Text style={styles.place}>Los Angeles, CA</Text>
-          <Image source={require("./../../Assests/dropdown.png")} />
-        </View>
-
         <View style={styles.searchView}>
           <TextInput
             style={styles.searchInput}
-            placeholder="Search for a restaraunt"
+            placeholder="Search for a Service"
           />
           <EvilIcons name="search" size={25} color={"gray"} />
         </View>
 
         <View>
+          <Text style={styles.review}>Review</Text>
           <ScrollView
             horizontal={true}
             style={styles.slider}
@@ -67,17 +69,19 @@ export default function Search({ navigation }) {
         </View>
 
         <View>
-          <Text style={styles.more}>Much More</Text>
-          {card.map((v, i) => (
+          <Text style={styles.more}>All Services</Text>
+          {services?.map((v, i) => (
             <MoreCard
               key={i}
               data={v}
-              addItemHandleChange={addItemHandleChange}
+              navigation={navigation}
+              
+              // addItemHandleChange={addItemHandleChange}
             />
           ))}
         </View>
       </View>
-
+      {/* 
       <RBSheet
         ref={(ref) => {
           this[RBSheet + 0] = ref;
@@ -99,7 +103,7 @@ export default function Search({ navigation }) {
         height={windowHeight - 150}
       >
         <BottomSheet navigation={navigation} close={addItemHandleChangeClose} />
-      </RBSheet>
+      </RBSheet> */}
     </ScrollView>
   );
 }
@@ -143,5 +147,10 @@ const styles = StyleSheet.create({
   more: {
     fontWeight: "bold",
     fontSize: 18,
+  },
+  review: {
+    fontWeight: "bold",
+    marginTop: 20,
+    fontSize: 20,
   },
 });

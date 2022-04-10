@@ -7,20 +7,16 @@ import {
   FontAwesome,
 } from "@expo/vector-icons";
 
-import {
-  More,
-  MyFavorite,
-  Search,
-  Logout,
-  MyProfile,
-} from "./../../Screens/index";
-import Sidebar from "./Sidebar";
+import { MyProfile } from "./../../Screens/index";
+import Sidebar from "./serviceProviderSidebar";
+import ServiceHome from "../../Screens/ServiceProviderPortal/Home/Home";
+import AddService from "../../Screens/ServiceProviderPortal/AddService/AddService";
 const Drawer = createDrawerNavigator();
 
-export default function DrawerNavigator() {
+export default function ServiceProviderDrawer() {
   return (
     <Drawer.Navigator
-      initialRouteName="Search"
+      initialRouteName="ServiceHome"
       screenOptions={{
         drawerStyle: {
           backgroundColor: "white",
@@ -33,8 +29,8 @@ export default function DrawerNavigator() {
       drawerContent={(props) => <Sidebar {...props} />}
     >
       <Drawer.Screen
-        name="Search"
-        component={Search}
+        name="ServiceHome"
+        component={ServiceHome}
         options={{
           headerStyle: {
             backgroundColor: "#0466C8",
@@ -47,6 +43,23 @@ export default function DrawerNavigator() {
           headerTitle: "What’s Happening ?",
           drawerIcon: ({ color, size }) => (
             <EvilIcons name="search" size={size} color={color} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="Add Services"
+        component={AddService}
+        options={{
+          headerStyle: {
+            backgroundColor: "#0466C8",
+          },
+          headerTitleStyle: {
+            color: "white",
+          },
+          drawerLabel: "My Favorites",
+          headerTintColor: "white",
+          drawerIcon: ({ color, size }) => (
+            <MaterialIcons name="favorite" size={size} color={color} />
           ),
         }}
       />
@@ -64,45 +77,6 @@ export default function DrawerNavigator() {
           drawerLabel: "My Profile",
           drawerIcon: ({ color, size }) => (
             <FontAwesome name="user" size={size} color={color} />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="MyFavorites"
-        component={MyFavorite}
-        options={{
-          headerStyle: {
-            backgroundColor: "#0466C8",
-          },
-          headerTitleStyle: {
-            color: "white",
-          },
-          drawerLabel: "My Favorites",
-          headerTintColor: "white",
-          drawerIcon: ({ color, size }) => (
-            <MaterialIcons name="favorite" size={size} color={color} />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="More"
-        component={More}
-        options={{
-          headerStyle: {
-            backgroundColor: "#0466C8",
-          },
-          headerTitleStyle: {
-            color: "white",
-          },
-          headerTintColor: "white",
-        }}
-      />
-      <Drawer.Screen
-        name="Logout"
-        component={Logout}
-        options={{
-          drawerIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="logout" size={size} color={color} />
           ),
         }}
       />

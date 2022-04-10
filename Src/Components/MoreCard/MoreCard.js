@@ -1,17 +1,25 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import React from "react";
 
-export default function MoreCard({ data, addItemHandleChange }) {
+export default function MoreCard({ data, addItemHandleChange, navigation }) {
+  console.log(data);
   return (
-    <TouchableOpacity
-      style={styles.container}
-      onPress={() => addItemHandleChange()}
-    >
-      <Image source={data.image} />
+    <TouchableOpacity style={styles.container}>
+      <Image source={{ uri: data.serviceImage }} style={styles.image} />
       <View style={styles.right}>
-        <Text style={styles.price}>{data.price}</Text>
-        <Text style={styles.address}>{data.address}</Text>
+        <Text style={styles.price}>{data.serviceName}</Text>
+        <Text style={styles.address}>{data.serviceDetail}</Text>
       </View>
+      <TouchableOpacity
+        style={styles.getService}
+        onPress={() =>
+          navigation.navigate("getOrder", {
+            data,
+          })
+        }
+      >
+        <Text style={styles.getServiceText}>Get Service</Text>
+      </TouchableOpacity>
     </TouchableOpacity>
   );
 }
@@ -37,6 +45,20 @@ const styles = StyleSheet.create({
     fontSize: 11,
   },
   right: {
-    width: "55%",
+    // width: "5%",
+  },
+  image: {
+    width: 90,
+    height: 90,
+    borderRadius: 20,
+  },
+  getService: {
+    backgroundColor: "#0466C8",
+    padding: 10,
+    borderRadius: 10,
+  },
+  getServiceText: {
+    fontSize: 10,
+    color: "white",
   },
 });

@@ -7,6 +7,8 @@ import RadioForm, {
   RadioButtonInput,
   RadioButtonLabel,
 } from "react-native-simple-radio-button";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 var radio_props = [
   { label: "User", value: "User" },
@@ -14,14 +16,51 @@ var radio_props = [
 ];
 
 export default function Singin({ navigation, route }) {
-  let [type, setType] = useState("User");
+  let [type, setType] = useState("");
   let [email, setEmail] = useState("");
   let [Password, setPassword] = useState("");
 
-  useEffect(() => {
-    // navigation.navigate("Home");
+  useEffect(async () => {
+    let User = await AsyncStorage.getItem("user");
+    if (User) {
+      navigation.navigate("UserHome");
+    }
   }, []);
 
+  let login = () => {
+    if (type) {
+      if (type === "User") {
+        axios
+          .post(`https://servicesproviderapp.herokuapp.com/api/user/login`, {
+            email: email,
+            password: Password,
+          })
+          .then((response) => {
+            console.log(response.data);
+            if (response.data.result === "success") {
+              alert("Login Successfull");
+              let userObj = { user: response.data.user };
+              AsyncStorage.setItem("User", JSON.stringify(userObj));
+              navigation.navigate("UserHome");
+            } else {
+              alert(response.data.result);
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+            alert(error);
+          });
+      } else {
+        if (email === "admin@admin.com" && Password === "admin@123") {
+          navigation.navigate("SeriveProviderHome");
+        } else {
+          alert("You Have Entered Wrong Detail");
+        }
+      }
+    } else {
+      alert("Type Not selcted");
+    }
+  };
   console.log(email, Password);
 
   return (
@@ -64,7 +103,7 @@ export default function Singin({ navigation, route }) {
           width={300}
           redius={12}
           height={54}
-          onpress={() => navigation.navigate("Home")}
+          onpress={() => login()}
         />
       </View>
     </View>
