@@ -7,43 +7,51 @@ import {
   ScrollView,
   Dimensions,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { EvilIcons } from "@expo/vector-icons";
 import MainCard from "./../../../Components/MainCard/MainCard";
 import MoreCard from "./../../../Components/MoreCard/MoreCard";
 import BottomSheet from "./../../../Components/BottomSheet/BottomSheet";
 import RBSheet from "react-native-raw-bottom-sheet";
+import AdminSerivceCard from "../../../Components/AdminSrviceCard/AdminServiceCard";
+import { getallService } from "../../../Config/function";
+import Toast from "react-native-smart-toast-alert";
 
-let card = [
-  {
-    image: require("./../../../Assests/cardimage1.png"),
-    price: "$433,000",
-    address: "408 E 92nd St, New York, NY 10128",
-  },
-  {
-    image: require("./../../../Assests/cardimage2.png"),
-    price: "$712,000",
-    address: "440 E 79th St APT 8C, New York, NY 10075",
-  },
-];
 export default function ServiceHome({ navigation }) {
   const windowHeight = Dimensions.get("window").height;
 
-  // const addItemHandleChange = () => {
-  //   this[RBSheet + 0].open();
-  // };
+  let [services, setServices] = useState();
 
-  // const addItemHandleChangeClose = () => {
-  //   this[RBSheet + 0].close();
-  // };
+  let RefreshData = async (val) => {
+    console.log(val);
+    if (val === "error") {
+      Toast.showToast("Some thing is wrong", "red");
+    } else {
+      let getallServices = await getallService();
+      setServices(getallServices);
 
+      console.log(getallServices);
+      if (val === "delete") {
+        Toast.showToast("Deleted Successfully", "green");
+      }
+    }
+  };
+
+  useEffect(async () => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      RefreshData();
+    });
+    return unsubscribe;
+  }, [navigation]);
   return (
     <ScrollView>
       <View style={styles.container}>
+        <Toast />
+
         <View style={styles.searchView}>
           <TextInput
             style={styles.searchInput}
-            placeholder="Search for a restaraunt"
+            placeholder="Search for a Services"
           />
           <EvilIcons name="search" size={25} color={"gray"} />
         </View>
@@ -61,11 +69,12 @@ export default function ServiceHome({ navigation }) {
 
         <View>
           <Text style={styles.more}>Much More</Text>
-          {card.map((v, i) => (
-            <MoreCard
+          {services?.map((v, i) => (
+            <AdminSerivceCard
               key={i}
               data={v}
-              // addItemHandleChange={addItemHandleChange}
+              type="admin"
+              RefreshData={RefreshData}
             />
           ))}
         </View>

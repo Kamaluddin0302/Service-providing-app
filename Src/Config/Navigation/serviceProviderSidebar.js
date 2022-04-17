@@ -6,6 +6,7 @@ import {
   MaterialCommunityIcons,
   Entypo,
   FontAwesome,
+  MaterialIcons,
 } from "@expo/vector-icons";
 
 export default function ServiceProviderSidebar(props) {
@@ -16,7 +17,7 @@ export default function ServiceProviderSidebar(props) {
           source={require("./../../Assests/Ellipse9.png")}
           style={styles.image}
         />
-        <Text style={styles.name}>Service Provider</Text>
+        <Text style={styles.name}>Smart Service App</Text>
       </View>
       <View style={styles.menuContainer}>
         <DrawerItem
@@ -41,6 +42,19 @@ export default function ServiceProviderSidebar(props) {
           }}
           icon={({ color, size }) => (
             <Entypo name="add-to-list" size={size} color={"gray"} />
+          )}
+        />
+
+        <DrawerItem
+          label="All ORDERS"
+          labelStyle={{
+            fontWeight: "bold",
+          }}
+          onPress={() => {
+            props.navigation.navigate("AllOrders");
+          }}
+          icon={({ color, size }) => (
+            <MaterialIcons name="request-quote" size={size} color={"gray"} />
           )}
         />
         <DrawerItem

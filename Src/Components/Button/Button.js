@@ -23,11 +23,12 @@ export default function Button({
       onPress={() => onpress()}
       disabled={disable}
     >
-      <Text style={styles(bgColor, width, color).text}>{title}</Text>
-      {disable && (
+      {!disable ? (
+        <Text style={styles(bgColor, width, color).text}>{title}</Text>
+      ) : (
         <ActivityIndicator
           size="small"
-          color="white"
+          color="black"
           style={{ position: "absolute", marginTop: 14 }}
         />
       )}

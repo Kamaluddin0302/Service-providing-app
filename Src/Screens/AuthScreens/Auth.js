@@ -9,7 +9,11 @@ export default function Auth({ navigation, route }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Service Provider App</Text>
+      {/* <Text style={styles.title}>Smart Service App</Text> */}
+      <Image
+        source={require("./../../Assests/image.webp")}
+        style={styles.title}
+      />
       <View style={styles.tabBar}>
         <AuthTab />
       </View>
@@ -23,10 +27,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   title: {
-    fontSize: 30,
-    color: "#0466C8",
-    fontWeight: "bold",
-    marginVertical: 100,
+    marginTop: 100,
   },
   tabBar: {
     backgroundColor: "black",

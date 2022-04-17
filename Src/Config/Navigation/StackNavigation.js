@@ -4,14 +4,16 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Auth, Detail } from "../../Screens/index";
 import UserDrawer from "./UserDrawer";
 import ServiceProviderDrawer from "./serviceProviderDrawer";
-import getOrder from "../../Screens/GetOrder/GetOrder";
+import GetOrder from "../../Screens/GetOrder/GetOrder";
+import OrderDetail from "../../Screens/OrderDetail.js/OrderDetail";
+import AcceptOrder from "./../../Screens/ServiceProviderPortal/AcceptOrder/AcceptOrder";
 
 const Stack = createNativeStackNavigator();
 
 function StackNavigator() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Auth">
+      <Stack.Navigator initialRouteName="SeriveProviderHome">
         <Stack.Screen
           name="Auth"
           component={Auth}
@@ -24,8 +26,8 @@ function StackNavigator() {
         />
 
         <Stack.Screen
-          name="getOrder"
-          component={getOrder}
+          name="GetOrder"
+          component={GetOrder}
           options={{
             headerShown: true,
             headerStyle: {
@@ -33,6 +35,32 @@ function StackNavigator() {
             },
             headerTintColor: "white",
             headerTitle: "Get Order",
+          }}
+        />
+
+        <Stack.Screen
+          name="OrderDetail"
+          component={OrderDetail}
+          options={{
+            headerShown: true,
+            headerStyle: {
+              backgroundColor: "#0466C8",
+            },
+            headerTintColor: "white",
+            headerTitle: "Order Detail",
+          }}
+        />
+
+        <Stack.Screen
+          name="AcceptOrder"
+          component={AcceptOrder}
+          options={{
+            headerShown: true,
+            headerStyle: {
+              backgroundColor: "#0466C8",
+            },
+            headerTintColor: "white",
+            headerTitle: "Order Detail",
           }}
         />
 

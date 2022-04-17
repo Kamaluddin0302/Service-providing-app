@@ -11,6 +11,7 @@ import { MyProfile } from "./../../Screens/index";
 import Sidebar from "./serviceProviderSidebar";
 import ServiceHome from "../../Screens/ServiceProviderPortal/Home/Home";
 import AddService from "../../Screens/ServiceProviderPortal/AddService/AddService";
+import AllOrders from "../../Screens/ServiceProviderPortal/AllOrders/AllOrders";
 const Drawer = createDrawerNavigator();
 
 export default function ServiceProviderDrawer() {
@@ -64,8 +65,8 @@ export default function ServiceProviderDrawer() {
         }}
       />
       <Drawer.Screen
-        name="MyProfile"
-        component={MyProfile}
+        name="AllOrders"
+        component={AllOrders}
         options={{
           headerStyle: {
             backgroundColor: "#0466C8",
@@ -74,7 +75,7 @@ export default function ServiceProviderDrawer() {
             color: "white",
           },
           headerTintColor: "white",
-          drawerLabel: "My Profile",
+          drawerLabel: "All Orders",
           drawerIcon: ({ color, size }) => (
             <FontAwesome name="user" size={size} color={color} />
           ),

@@ -1,33 +1,46 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+  Modal,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getCurrentUserOrder } from "../../../Config/function";
-import { ScrollView } from "react-native-gesture-handler";
+import { getAllOrders, getCurrentUserOrder } from "../../../Config/function";
+import ImageViewer from "react-native-image-zoom-viewer";
+import axios from "axios";
+import Toast from "react-native-smart-toast-alert";
 
-export default function ServiceStatus({ navigation }) {
+export default function AllOrders({ navigation }) {
   let [order, setOrder] = useState();
+  let [modalVisible, setmodalVisible] = useState(false);
+
+  let getallOrders = async () => {
+    let userOrder = await getAllOrders();
+    if (userOrder) {
+      setOrder(userOrder);
+    }
+  };
+
   useEffect(async () => {
-    const unsubscribe = navigation.addListener("focus", async () => {
-      const value = await AsyncStorage.getItem("User");
-      if (value) {
-        let user = JSON.parse(value).user;
-        console.log(user);
-        let userOrder = await getCurrentUserOrder(user._id);
-        console.log(userOrder, "kmkfm");
-        if (userOrder) {
-          setOrder(userOrder);
-        }
-      }
-    });
-    return unsubscribe;
+    // const unsubscribe = navigation.addListener("focus", async () => {
+    getallOrders();
+    // });
+    // return unsubscribe;
   }, [navigation]);
+
+
 
   return (
     <ScrollView>
+      <Toast />
       <View>
         <Text style={styles.title}>Services Status</Text>
 
-        {order?.reverse().map((val, ind) => (
+        {order?.map((val, ind) => (
           <View style={styles.card} key={ind}>
             <View style={styles.topHeader}>
               <Image
@@ -36,18 +49,29 @@ export default function ServiceStatus({ navigation }) {
               />
               <Text style={styles.name}>{val.serviceName}</Text>
             </View>
+            <Image source={{ uri: val.image }} style={styles.image} />
+
+            {/* <View>
+              <TouchableOpacity onPress={() => setmodalVisible(true)}>
+                <Image source={{ uri: val.image }} style={styles.image} />
+              </TouchableOpacity>
+              <Modal
+                visible={modalVisible}
+                transparent={true}
+                onRequestClose={() => setmodalVisible(false)}
+              >
+                <ImageViewer imageUrls={[{ url: order[ind].image }]} />
+              </Modal>
+            </View> */}
+
             <TouchableOpacity
               style={styles.container}
-              onPress={() => navigation.navigate("OrderDetail", { data: val })}
+              onPress={() => navigation.navigate("AcceptOrder", { data: val })}
             >
-              <Image source={{ uri: val.image }} style={styles.image} />
               <View style={styles.right}>
                 <Text style={styles.price}>{val.detail}</Text>
                 <Text style={styles.address}>{val.address}</Text>
               </View>
-              <TouchableOpacity style={styles.getService} disabled={true}>
-                <Text style={styles.getServiceText}>Pendding</Text>
-              </TouchableOpacity>
             </TouchableOpacity>
           </View>
         ))}
@@ -75,6 +99,7 @@ let styles = StyleSheet.create({
     width: 50,
     height: 50,
     marginRight: 10,
+    borderRadius: 50,
   },
   topHeader: {
     flexDirection: "row",
@@ -106,12 +131,14 @@ let styles = StyleSheet.create({
     width: "45%",
   },
   image: {
-    width: 60,
-    height: 60,
-    borderRadius: 20,
+    width: 260,
+    height: 260,
+    // borderRadius: 10,
+    marginVertical: 5,
+    alignSelf: "center",
   },
   getService: {
-    backgroundColor: "gray",
+    backgroundColor: "green",
     padding: 10,
     borderRadius: 10,
   },

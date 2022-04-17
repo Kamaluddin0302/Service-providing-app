@@ -40,7 +40,7 @@ export default function UserDrawer() {
             fontSize: 14,
           },
           headerTintColor: "white",
-          headerTitle: "Service Provide App",
+          headerTitle: "Smart Service App",
           drawerIcon: ({ color, size }) => (
             <EvilIcons name="search" size={size} color={color} />
           ),

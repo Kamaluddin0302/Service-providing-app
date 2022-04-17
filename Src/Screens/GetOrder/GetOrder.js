@@ -7,19 +7,30 @@ import {
   TouchableOpacity,
   ScrollView,
   TextInput,
+  ActivityIndicator,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "./../../Components/Button/Button";
 import { Feather } from "@expo/vector-icons";
 import * as DocumentPicker from "expo-document-picker";
 import firebase from "firebase";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
+import CheckBox from "react-native-check-box";
 
 export default function getOrder({ close, navigation, route }) {
   let { data } = route.params;
 
-  let [image, setImage] = useState();
+  let [image, setImage] = useState(
+    "https://w7.pngwing.com/pngs/122/369/png-transparent-spanners-compression-fitting-coupling-piping-and-plumbing-fitting-others-miscellaneous-hand-steel.png"
+  );
   let [detail, setDetail] = useState();
   let [address, setAddress] = useState();
+  let [user, setUser] = useState();
+  let [price, setPrice] = useState();
+  const [cash_on_delavery, setcash_on_delavery] = useState(false);
+
+  let [disable, setdisable] = useState(false);
 
   let DocumentPickerFUnc = async () => {
     let result = await DocumentPicker.getDocumentAsync({
@@ -52,37 +63,52 @@ export default function getOrder({ close, navigation, route }) {
       alert("Please Enter Detail");
     } else if (!address) {
       alert("Please Enter Address");
+    } else if (!price) {
+      alert("Please Enter Minimum");
     } else {
-      setButtonSpiner(true);
+      setdisable(true);
       axios
         .post(
-          "https://servicesproviderapp.herokuapp.com/api/posts/addservice",
+          "https://servicesproviderapp.herokuapp.com/api/posts/booktechnician",
           {
-            serviceName,
-            serviceDetail,
-            serviceImage,
+            detail,
+            address,
+            image,
+            uid: user._id,
+            userName: user.name,
+            serviceName: data.serviceName,
+            serviceImage: data.serviceImage,
+            price,
+            cash_on_delavery,
           }
         )
         .then(function (response) {
           if (response.data.result === "success") {
             alert("Service Added Successfully");
-            setServiceName("");
-            setServiceDetail("");
-            setServiceImage(
-              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMiU5Jxbvtw3v9n7J90nvNX7spyGD5r6l6uw&usqp=CAU"
-            );
-            setButtonSpiner(false);
-            console.log(response.data);
+            setDetail("");
+            setAddress("");
+            setdisable(false);
+            navigation.navigate("OrdersStatus");
           } else {
+            setdisable(false);
             alert(response.data.result);
           }
         })
         .catch(function (error) {
           console.log(error);
+          setdisable(false);
           alert(error);
         });
     }
   };
+
+  useEffect(async () => {
+    let User = await AsyncStorage.getItem("User");
+    if (User) {
+      setUser(JSON.parse(User).user);
+      console.log(User);
+    }
+  }, []);
   return (
     <View>
       <ScrollView>
@@ -115,6 +141,7 @@ export default function getOrder({ close, navigation, route }) {
             multiline={true}
             numberOfLines={5}
             placeholder="Enter Detail ............."
+            value={detail}
             onChangeText={(text) => setDetail(text)}
           />
 
@@ -123,8 +150,34 @@ export default function getOrder({ close, navigation, route }) {
             style={styles.textinput}
             multiline={true}
             numberOfLines={1}
+            value={address}
             placeholder="Enter Full Address ............."
             onChangeText={(text) => setAddress(text)}
+          />
+          <Text style={styles.question}>Minimal Price ?</Text>
+          <View style={styles.price}>
+            <TextInput
+              style={styles.priceInput}
+              multiline={true}
+              numberOfLines={1}
+              value={price}
+              keyboardType="numeric"
+              placeholder="Enter Your Minimal Price ............."
+              onChangeText={(text) => setPrice(text)}
+            />
+            <Text style={styles.priceText}> $/Hour</Text>
+          </View>
+          <Text style={styles.question}>Why You Want This Service ?</Text>
+
+          <CheckBox
+            style={styles.checkBox}
+            onClick={() => setcash_on_delavery(!cash_on_delavery)}
+            isChecked={cash_on_delavery}
+            rightText={"Cash on delivery"}
+            rightTextStyle={{
+              color: "gray",
+            }}
+            checkBoxColor="#0466C8"
           />
 
           <View style={styles.buttonView}>
@@ -135,9 +188,10 @@ export default function getOrder({ close, navigation, route }) {
               width={124}
               redius={8}
               borderColor="#0466C8"
-              height={50}
-              onpress={() => {
-                navigation.navigate("Detail");
+              height={45}
+              disable={disable}
+              onpress={async () => {
+                BookTechnician();
               }}
             />
           </View>
@@ -230,10 +284,35 @@ let styles = StyleSheet.create({
     borderColor: "#0466C8",
     padding: 10,
     textAlignVertical: "top",
+    borderRadius: 10,
   },
   question: {
     fontWeight: "bold",
     fontSize: 15,
     marginVertical: 10,
+  },
+  price: {
+    borderWidth: 1,
+    borderColor: "#0466C8",
+    borderRadius: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 20,
+  },
+  priceInput: {
+    padding: 10,
+    textAlignVertical: "top",
+  },
+  priceText: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  checkBox: {
+    flex: 1,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: "#0466C8",
+    borderRadius: 10,
   },
 });

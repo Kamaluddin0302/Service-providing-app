@@ -9,147 +9,84 @@ import {
 import React from "react";
 import { Rating, AirbnbRating } from "react-native-ratings";
 import Button from "./../../Components/Button/Button";
+import { TextInput } from "react-native-gesture-handler";
+import axios from "axios";
 
-export default function BottomSheet({ close, navigation }) {
+export default function BottomSheet({ close, navigation, id }) {
+  let [time, setTime] = useState();
+  let [technicianLocation, setTechnicianLocation] = useState();
+
+  let UpdateOrder = () => {
+    axios
+      .put(
+        `https://servicesproviderapp.herokuapp.com/api/get/updateorder/${id}?status=accepted&reachtime=${time}&technicianLocatio=${technicianLocation}`
+      )
+      .then(function (response) {
+        if (response.data.result === "success") {
+          Toast.showToast("Order Is Sunccessfully Accepted", "#228B22");
+          getallOrders();
+        } else {
+          Toast.showToast(response.data.result, "red");
+        }
+      })
+      .catch(function (error) {
+        Toast.showToast(error, "red");
+      });
+  };
+
   return (
-    <View>
-      <ImageBackground
-        source={require("./../../Assests/image3.png")}
-        style={styles.backimage}
-      >
-        <ImageBackground
-          source={require("./../../Assests/image2.png")}
-          style={styles.backimage2}
-        >
-          <TouchableOpacity style={styles.cross} onPress={() => close()}>
-            <Image source={require("./../../Assests/cross.png")} />
-          </TouchableOpacity>
-          <View style={styles.bottomcard}>
-            <Text style={styles.name}>Craftman’s Cafe</Text>
-            <Text style={styles.shortDetail}>
-              520 N Btoudry Ave Los Angeles
-            </Text>
-            <Rating
-              type="star"
-              ratingCount={5}
-              imageSize={15}
-              startingValue={5}
-              readonly={true}
-              style={{
-                alignSelf: "flex-start",
-              }}
-              ratingContainerStyle={{}}
-            />
-          </View>
-        </ImageBackground>
-      </ImageBackground>
+    <View style={styles.container}>
+      <Text style={styles.title}>Time With In You Reach</Text>
+      <TextInput
+        style={styles.textinput}
+        value={time}
+        placeholder="Time with in you reach"
+        onChangeText={(text) => setTime(text)}
+      />
 
-      <View style={styles.detailView}>
-        <Text style={styles.title}>Cuisines</Text>
-        <Text style={styles.subtitle}>
-          Latin | Cuban | Mexian | Caribbean and African
-        </Text>
-        <View style={styles.itemView}>
-          <View>
-            <Text style={styles.title}>Meals</Text>
-            <Text style={styles.subtitle}>Lunch and Dinner</Text>
-          </View>
-          <View>
-            <Text style={styles.title}>Special Deals</Text>
-            <Text style={styles.subtitle}>Vegitarian Friendly</Text>
-          </View>
-        </View>
-        <Text style={styles.title}>Features</Text>
+      <Text style={styles.title}>Your Current Location</Text>
+      <TextInput
+        style={styles.textinput}
+        placeholder="Your Current Location"
+        value={technicianLocation}
+        onChangeText={(text) => setTechnicianLocation(text)}
+      />
 
-        <View style={styles.itemView}>
-          <View>
-            <View style={styles.itemList}>
-              <Image source={require("./../../Assests/kitchen.png")} />
-              <Text style={styles.itemText}>Open Kitchen</Text>
-            </View>
-            <View style={styles.itemList}>
-              <Image source={require("./../../Assests/Car.png")} />
-              <Text style={styles.itemText}>Street parking</Text>
-            </View>
-            <View style={styles.itemList}>
-              <Image source={require("./../../Assests/wifi.png")} />
-              <Text style={styles.itemText}>Free WiFi</Text>
-            </View>
-          </View>
-          <View style={styles.buttonView}>
-            <Button
-              title="See full Menu"
-              bgColor="#FFFFFF"
-              color="#0466C8"
-              width={124}
-              redius={8}
-              borderColor="#0466C8"
-              height={50}
-              onpress={() => {
-                navigation.navigate("Detail");
-                close();
-              }}
-            />
-          </View>
-        </View>
+      <View style={styles.buttonView}>
+        <Button
+          title="Accept Order"
+          bgColor="#FFFFFF"
+          color="#0466C8"
+          width={124}
+          redius={8}
+          borderColor="#0466C8"
+          height={35}
+          onpress={() => {
+            UpdateOrder();
+            close();
+          }}
+        />
       </View>
     </View>
   );
 }
 
 let styles = StyleSheet.create({
-  backimage: {
-    width: "100%",
-    height: 200,
-    marginTop: -25,
-  },
-  backimage2: {
-    width: "100%",
-    height: "100%",
-  },
-  cross: {
-    alignSelf: "flex-end",
-    margin: 30,
-  },
-  bottomcard: {
-    marginTop: 40,
-    marginLeft: 20,
-  },
-  name: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "white",
-  },
-  shortDetail: {
-    fontSize: 12,
-    color: "lightgray",
-  },
-  detailView: {
+  container: {
     padding: 20,
-  },
-  title: {
-    color: "black",
-    fontSize: 18,
-    fontWeight: "bold",
-    marginVertical: 10,
-  },
-  subtitle: {
-    fontSize: 15,
-    marginVertical: 10,
-    color: "black",
-  },
-  itemView: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  itemList: {
-    flexDirection: "row",
-    marginVertical: 10,
-  },
-  itemText: {
-    marginLeft: 20,
   },
   buttonView: {
     marginTop: 50,
+  },
+  textinput: {
+    borderWidth: 2,
+    borderColor: "#0466C8",
+    padding: 10,
+    borderRadius: 10,
+  },
+  title: {
+    marginVertical: 5,
+    fontWeight: "bold",
+    color: "#0466C8",
   },
 });

@@ -1,4 +1,11 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import TextInput from "../../../Components/TextInput/Textinput";
 import Button from "../../../Components/Button/Button";
@@ -21,7 +28,7 @@ export default function Singin({ navigation, route }) {
   let [Password, setPassword] = useState("");
 
   useEffect(async () => {
-    let User = await AsyncStorage.getItem("user");
+    let User = await AsyncStorage.getItem("User");
     if (User) {
       navigation.navigate("UserHome");
     }
@@ -64,49 +71,51 @@ export default function Singin({ navigation, route }) {
   console.log(email, Password);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.middleView}>
-        <TextInput
-          require={true}
-          text="Email address"
-          width={300}
-          name="Email"
-          type="email-address"
-          value={email}
-          GetInputVlue={(text) => setEmail(text)}
-        />
-        <TextInput
-          require={true}
-          text="Password"
-          width={300}
-          name="Password"
-          security={true}
-          value={Password}
-          GetInputVlue={(text) => setPassword(text)}
-        />
-        <Text style={styles.account}>Select Account Type</Text>
+    <ScrollView showsVerticalScrollIndicator={false}>
+      <View style={styles.container}>
+        <View style={styles.middleView}>
+          <TextInput
+            require={true}
+            text="Email address"
+            width={300}
+            name="Email"
+            type="email-address"
+            value={email}
+            GetInputVlue={(text) => setEmail(text)}
+          />
+          <TextInput
+            require={true}
+            text="Password"
+            width={300}
+            name="Password"
+            security={true}
+            value={Password}
+            GetInputVlue={(text) => setPassword(text)}
+          />
+          <Text style={styles.account}>Select Account Type</Text>
 
-        <RadioForm
-          radio_props={radio_props}
-          initial={"User"}
-          onPress={(value) => {
-            console.log(value);
-            setType(value);
-          }}
-          formHorizontal={false}
-        />
+          <RadioForm
+            radio_props={radio_props}
+            initial={"User"}
+            onPress={(value) => {
+              console.log(value);
+              setType(value);
+            }}
+            formHorizontal={false}
+          />
 
-        <Button
-          title="Login"
-          bgColor="#0466C8"
-          color="#ffffff"
-          width={300}
-          redius={12}
-          height={54}
-          onpress={() => login()}
-        />
+          <Button
+            title="Login"
+            bgColor="#0466C8"
+            color="#ffffff"
+            width={300}
+            redius={12}
+            height={54}
+            onpress={() => login()}
+          />
+        </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 const styles = StyleSheet.create({

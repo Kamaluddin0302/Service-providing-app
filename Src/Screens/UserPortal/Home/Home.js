@@ -75,7 +75,7 @@ export default function Home({ navigation }) {
               key={i}
               data={v}
               navigation={navigation}
-              
+
               // addItemHandleChange={addItemHandleChange}
             />
           ))}

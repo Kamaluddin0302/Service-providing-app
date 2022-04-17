@@ -1,13 +1,34 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import React from "react";
+import axios from "axios";
+import Toast from "react-native-smart-toast-alert";
 
-export default function MoreCard({
+export default function AdminSerivceCard({
   data,
-  addItemHandleChange,
+  RefreshData,
   navigation,
   type,
 }) {
   console.log(data);
+
+  let DeletService = () => {
+    axios
+      .delete(
+        `https://servicesproviderapp.herokuapp.com/api/get/deleteService/${data._id}`
+      )
+      .then(function (response) {
+        if (response.data.result === "success") {
+          RefreshData("delete");
+        } else {
+          console.log(response.data);
+          RefreshData("error");
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+        RefreshData("error");
+      });
+  };
   return (
     <TouchableOpacity style={styles.container}>
       <Image source={{ uri: data.serviceImage }} style={styles.image} />
@@ -17,13 +38,9 @@ export default function MoreCard({
       </View>
       <TouchableOpacity
         style={styles.getService}
-        onPress={() =>
-          navigation.navigate("GetOrder", {
-            data,
-          })
-        }
+        onPress={() => DeletService()}
       >
-        <Text style={styles.getServiceText}>Get Service</Text>
+        <Text style={styles.getServiceText}>Delete</Text>
       </TouchableOpacity>
     </TouchableOpacity>
   );
@@ -51,7 +68,6 @@ const styles = StyleSheet.create({
   },
   right: {
     width: "50%",
-    alignItems: "center",
   },
   image: {
     width: 80,

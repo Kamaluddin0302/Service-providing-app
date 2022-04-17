@@ -13,7 +13,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function UserSidebar(props) {
   let [user, setUser] = useState("");
   useEffect(async () => {
-    let User = await AsyncStorage.getItem("user");
+    let User = await AsyncStorage.getItem("User");
     if (User) {
       setUser(JSON.parse(User).user);
       console.log(User);
@@ -54,7 +54,7 @@ export default function UserSidebar(props) {
           label="Order Status"
           labelStyle={{}}
           onPress={() => {
-            props.navigation.navigate("More");
+            props.navigation.navigate("OrdersStatus");
           }}
           icon={({ color, size }) => (
             <AntDesign name="appstore-o" size={size} color={"lightgray"} />
@@ -64,7 +64,9 @@ export default function UserSidebar(props) {
           label="Logout"
           labelStyle={{}}
           onPress={() => {
-            props.navigation.replace("Auth");
+            AsyncStorage.removeItem("User").then(() => {
+              props.navigation.replace("Auth");
+            });
           }}
           icon={({ color, size }) => (
             <MaterialCommunityIcons

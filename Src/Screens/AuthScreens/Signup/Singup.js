@@ -24,28 +24,38 @@ export default function Singup({ navigation, route }) {
 
   let signupFunc = () => {
     console.log(address, name, Password, email);
-    axios
-      .post(`https://servicesproviderapp.herokuapp.com/api/user/register`, {
-        name: name,
-        email: email,
-        password: Password,
-        address: address,
-      })
-      .then((response) => {
-        console.log(response.data);
-        if (response.data.result === "success") {
-          alert("Signup Success");
-          let userObj = { user: response.data.user };
-          AsyncStorage.setItem("user", JSON.stringify(userObj));
-          navigation.navigate("UserHome");
-        } else {
-          alert(response.data.message);
-        }
-      })
-      .catch(function (error) {
-        console.log(error.message);
-        alert(error.message);
-      });
+    if (!name) {
+      alert("Please Enter The Name");
+    } else if (!email) {
+      alert("Please Enter The Email");
+    } else if (!address) {
+      alert("Please Enter The Address");
+    } else if (!Password) {
+      alert("Please Enter The Password");
+    } else {
+      axios
+        .post(`https://servicesproviderapp.herokuapp.com/api/user/register`, {
+          name: name,
+          email: email,
+          password: Password,
+          address: address,
+        })
+        .then((response) => {
+          console.log(response.data);
+          if (response.data.result === "success") {
+            alert("Signup Success");
+            let userObj = { user: response.data.user };
+            AsyncStorage.setItem("User", JSON.stringify(userObj));
+            navigation.navigate("UserHome");
+          } else {
+            alert(response.data.message);
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+          alert(error.message);
+        });
+    }
   };
 
   return (
